@@ -31,32 +31,6 @@
     margin-bottom: 8px;
 }
 
-.footer-link {
-    color: #ffffff;
-    text-decoration: none;
-    transition: color 0.3s;
-    position: relative;
-
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 1.5px;
-        background-color: #bb86fc;
-        transition: width 0.4s ease;
-    }
-
-    &:hover::after {
-        width: 100%;
-    }
-
-    &:hover {
-        color: #7e7e7e;
-    }
-}
-
 .footer-bottom {
     margin: 0 100px;
     padding-top: 20px;
@@ -67,5 +41,83 @@
 
 .copyright {
     margin: 0;
-    font-size: 15px;
+    font-size: 13px;
+}
+
+/* Планшет - 768px до 1023px */
+@media screen and (max-width: 1023px) {
+    .footer-container {
+        padding: 35px 0 18px;
+    }
+
+    .footer-section {
+        min-width: 220px;
+        margin: 0 15px;
+    }
+
+    .footer-bottom {
+        margin: 0 80px;
+    }
+}
+
+/* Малый планшет - 481px до 767px */
+@media screen and (max-width: 767px) {
+    .footer-container {
+        padding: 30px 0 15px;
+    }
+
+    .footer-section {
+        min-width: 180px;
+        margin: 0 10px 20px;
+    }
+
+    .footer-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .footer-bottom {
+        margin: 0 40px;
+        padding-top: 15px;
+    }
+
+    .copyright {
+        font-size: 12px;
+    }
+}
+
+/* Телефон - до 480px */
+@media screen and (max-width: 480px) {
+    .footer-container {
+        padding: 25px 0 12px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        min-width: 150px;
+        margin: 0 0 25px;
+    }
+
+    .footer-title {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    .footer-list li {
+        margin-bottom: 6px;
+    }
+
+    .footer-bottom {
+        margin: 0 20px;
+        padding-top: 12px;
+    }
+
+    .copyright {
+        font-size: 11px;
+    }
 }

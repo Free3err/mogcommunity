@@ -6,7 +6,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 20px 30px;
     z-index: 100;
     transition: transform 0.3s ease;
     backdrop-filter: blur(15px);
@@ -18,13 +18,21 @@
 
 .logo {
     transition: color 0.2s ease-in-out;
-    color: #ffffff;
+    color: #E1E1E1;
     font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 
     &:hover {
         color: #bb86fc;
+    }
+
+    .logo-icon {
+        font-size: 38.4px;
     }
 }
 
@@ -32,8 +40,8 @@
     transition: color 0.2s ease-in-out;
     background: none;
     border: none;
-    color: #ffffff;
-    font-size: 1.5rem;
+    color: #E1E1E1;
+    font-size: 1.8rem;
     cursor: pointer;
     z-index: 100;
 

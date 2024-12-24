@@ -1,42 +1,97 @@
-import { Link } from 'react-router-dom';
-import './style.css';
+// Routing
+import { Link } from "react-router-dom";
+
+// Styles
+import "./style.css";
 
 const Footer = () => {
     return (
         <footer className="footer-container">
             <div className="footer-content">
-                <div className="footer-section">
+                {/* Contacts section */}
+                <nav className="footer-section">
                     <h3 className="footer-title">Контакты</h3>
                     <ul className="footer-list">
                         <li>
-                            <a href="https://discord.gg" className="footer-link">Discord</a>
+                            <a
+                                href="https://t.me/mogcommunity"
+                                className="underline-animation"
+                            >
+                                Telegram
+                            </a>
                         </li>
                         <li>
-                            <a href="https://vk.com" className="footer-link">VK</a>
+                            <a
+                                href="https://vk.com"
+                                className="underline-animation"
+                            >
+                                VK
+                            </a>
                         </li>
                         <li>
-                            <a href="mailto:contact@mogcommunity.ru" className="footer-link">Email</a>
+                            <a
+                                href="mailto:contact@mogcommunity.ru"
+                                className="underline-animation"
+                            >
+                                Email
+                            </a>
                         </li>
                     </ul>
-                </div>
+                </nav>
 
-                <div className="footer-section">
+                {/* Navigation section */}
+                <nav className="footer-section">
                     <h3 className="footer-title">Навигация</h3>
                     <ul className="footer-list">
                         <li>
-                            <Link to="/" className="footer-link">Главная</Link>
+                            <Link to="/" className="underline-animation">
+                                Главная
+                            </Link>
                         </li>
                         <li>
-                            <Link to="/projects" className="footer-link">Проекты</Link>
+                            <Link
+                                to="/projects"
+                                className="underline-animation"
+                            >
+                                Проекты
+                            </Link>
                         </li>
                         <li>
-                            <Link to="/contacts" className="footer-link">Контакты</Link>
+                            <Link
+                                to="/developers"
+                                className="underline-animation"
+                            >
+                                Разработчики
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/about" className="underline-animation">
+                                О нас
+                            </Link>
                         </li>
                     </ul>
-                </div>
+                </nav>
+
+                {/* Sign in section */}
+                <nav className="footer-section">
+                    <h3 className="footer-title">Вход</h3>
+                    <ul className="footer-list">
+                        <li>
+                            <Link to="/sign-in" className="underline-animation">
+                                Войти
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/sign-up" className="underline-animation">
+                                Зарегистрироваться
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
             </div>
+
             <div className="footer-bottom">
-                <p className="copyright">© 2024 MogCommunity. Все права защищены.</p>
+                <p className="copyright">© 2024 MogCommunity. MIT License.</p>
             </div>
         </footer>
     );

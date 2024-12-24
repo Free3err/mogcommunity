@@ -1,0 +1,81 @@
+.sign-in-container {
+    max-width: 400px;
+    margin: 8rem auto 3rem;
+    padding: 2rem;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sign-in-container h1 {
+    text-align: center;
+    color: #bb86fc;
+    margin-bottom: 2rem;
+}
+
+.sign-in-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 0.8rem !important;
+    color: #1e1e1e;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tablet - 768px to 1023px */
+@media screen and (max-width: 1023px) {
+    .sign-in-container {
+        max-width: 375px;
+        margin: 7rem auto 3rem;
+        padding: 1.8rem;
+    }
+
+    .sign-in-container h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Small tablet - 481px to 767px */
+@media screen and (max-width: 767px) {
+    .sign-in-container {
+        max-width: 325px;
+        margin: 8rem auto 2.5rem;
+        padding: 1.5rem;
+    }
+
+    .sign-in-container h1 {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .submit-button {
+        padding: 0.7rem !important;
+        font-size: 0.9rem;
+    }
+}
+
+/* Phone - up to 480px */
+@media screen and (max-width: 480px) {
+    .sign-in-container {
+        max-width: 90%;
+        margin: 10rem auto 2rem;
+        padding: 1.2rem;
+    }
+
+    .sign-in-container h1 {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .submit-button {
+        padding: 0.6rem !important;
+        font-size: 0.85rem;
+    }
+}
