@@ -1,7 +1,7 @@
 /* Hero Section */
 
 .hero-description {
-    color: #E1E1E1;
+    color: #e1e1e1;
     max-width: 800px;
     margin: 0 auto 2rem;
     font-size: 1.25rem;
@@ -14,50 +14,56 @@
 }
 
 .projects-title {
-    color: #BB86FC;
+    color: #bb86fc;
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2.5rem;
 }
 
-.project-card {
-    padding: 1rem;
-    background-color: #1E1E1E;
-    border-radius: 8px;
-    transition: transform 0.2s;
+.projects-section .project-card {
+    padding: 1.5rem;
     position: relative;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
+    height: 300px;
     display: flex;
     flex-direction: column;
 }
 
-.project-card:hover {
+.projects-section .project-card:hover {
     transform: scale(1.02);
 }
 
-.project-header {
+.projects-section .project-header {
     display: flex;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.project-icon {
-    font-size: 2.5rem;
-    color: #BB86FC;
-    margin-right: 1rem;
+.projects-section .project-icon {
+    flex-shrink: 0;
+    font-size: 2.5rem !important;
+    color: #bb86fc;
 }
 
-.project-title {
-    color: #BB86FC;
+.projects-section .project-title {
+    color: #bb86fc;
     font-size: 2rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.project-description {
-    color: #E1E1E1;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-    flex-grow: 1;
+.projects-section .project-description {
+    color: #e1e1e1;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+}
+
+.projects-section .default-button {
+    margin-top: auto;
 }

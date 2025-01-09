@@ -1,11 +1,13 @@
 // Routing
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 
 // Components
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
-import Sidebar from "./components/sidebar/Sidebar";
+
+// Modules
+import { validateSession } from "./modules/security";
 import Loading from "./components/loading/Loading";
 
 // Utils
@@ -16,9 +18,11 @@ import Home from "./pages/Info/Home";
 import Projects from "./pages/Info/Projects";
 import Developers from "./pages/Info/Developers";
 import About from "./pages/Info/About";
-import SignIn from "./pages/Info/SignIn";
-import SignUp from "./pages/Info/SignUp";
+import SignIn from "./pages/Auth/SignIn";
+import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/Info/NotFound";
+import Account from "./pages/Account/Account";
+
 // Modules
 import ProtectedRoute from "./modules/security";
 
@@ -27,11 +31,22 @@ import "./css/main.css";
 import "./assets/fonts/MontserratAlternates/style.css";
 
 const App = () => {
-    const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(false);
+        validateSession()
+            .then((isValid) => {
+                setIsAuthenticated(isValid);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }, []);
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     const routes = {
         publicRoutes: [
@@ -41,11 +56,11 @@ const App = () => {
             },
             {
                 path: "/projects",
-                element: <Projects setLoading={setLoading} />,
+                element: <Projects />,
             },
             {
                 path: "/developers",
-                element: <Developers setLoading={setLoading} />,
+                element: <Developers />,
             },
             {
                 path: "/about",
@@ -53,18 +68,23 @@ const App = () => {
             },
             {
                 path: "/sign-in",
-                element: <SignIn setLoading={setLoading} />,
+                element: <SignIn isAuthenticated={isAuthenticated}/>,
             },
             {
                 path: "/sign-up",
-                element: <SignUp setLoading={setLoading} />,
+                element: <SignUp isAuthenticated={isAuthenticated} />,
             },
             {
                 path: "*",
                 element: <NotFound />,
             },
         ],
-        privateRoutes: [],
+        privateRoutes: [
+            {
+                path: "/me",
+                element: <Account />,
+            },
+        ],
     };
 
     const Routing = () => {
@@ -72,24 +92,17 @@ const App = () => {
             ...routes.publicRoutes,
             ...routes.privateRoutes.map((route) => ({
                 ...route,
-                element: <ProtectedRoute element={route.element} />,
+                element: <ProtectedRoute isAuthenticated={isAuthenticated} element={route.element} />,
             })),
         ]);
-    };
-
-    const handleThemeChange = (newTheme) => {
-        localStorage.setItem("theme", newTheme);
     };
 
     return (
         <BrowserRouter>
             <ScrollToTop />
-            <Loading loading={loading}>
-                <Header />
-                <Sidebar />
-                <Routing />
-                <Footer />
-            </Loading>
+            <Header isAuthenticated={isAuthenticated}/>
+            <Routing />
+            <Footer isAuthenticated={isAuthenticated} />
         </BrowserRouter>
     );
 };

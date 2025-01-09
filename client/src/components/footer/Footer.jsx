@@ -1,10 +1,20 @@
+// REact
+import { useEffect } from "react";
+
 // Routing
 import { Link } from "react-router-dom";
+
+// Modules
+import { signOut } from "../../modules/security";
 
 // Styles
 import "./style.css";
 
-const Footer = () => {
+const Footer = ({isAuthenticated}) => {
+    useEffect(() => {
+        document.title = "MogCommunity | Главная";
+    });
+
     return (
         <footer className="footer-container">
             <div className="footer-content">
@@ -16,16 +26,10 @@ const Footer = () => {
                             <a
                                 href="https://t.me/mogcommunity"
                                 className="underline-animation"
+                                target="_blank"
+                                rel="noreferrer"
                             >
                                 Telegram
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="https://vk.com"
-                                className="underline-animation"
-                            >
-                                VK
                             </a>
                         </li>
                         <li>
@@ -74,24 +78,55 @@ const Footer = () => {
 
                 {/* Sign in section */}
                 <nav className="footer-section">
-                    <h3 className="footer-title">Вход</h3>
+                    <h3 className="footer-title">Аккаунт</h3>
                     <ul className="footer-list">
-                        <li>
-                            <Link to="/sign-in" className="underline-animation">
-                                Войти
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/sign-up" className="underline-animation">
-                                Зарегистрироваться
-                            </Link>
-                        </li>
+                        {isAuthenticated ? (
+                            <>
+                                <li>
+                                    <Link
+                                        to="/me"
+                                        className="underline-animation"
+                                    >
+                                        Мой аккаунт
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        onClick={() => {
+                                            signOut();
+                                        }}
+                                        className="underline-animation"
+                                    >
+                                        Выйти
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li>
+                                    <Link
+                                        to="/sign-in"
+                                        className="underline-animation"
+                                    >
+                                        Войти
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="/sign-up"
+                                        className="underline-animation"
+                                    >
+                                        Зарегистрироваться
+                                    </Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </div>
 
             <div className="footer-bottom">
-                <p className="copyright">© 2024 MogCommunity. MIT License.</p>
+                <p className="copyright">© 2024 MogCommunity {process.env.REACT_APP_VERSION}. MIT License.</p>
             </div>
         </footer>
     );

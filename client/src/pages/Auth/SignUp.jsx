@@ -2,22 +2,21 @@
 import { useState, useEffect } from "react";
 
 // Routing
-import { useNavigate, Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
-// Axios
+// HTTP Client
 import axios from "axios";
 
 // Styles
 import "../../css/sign-up.css";
 
-const SignUp = ({ setLoading }) => {
+const SignUp = ({isAuthenticated}) => {
     useEffect(() => {
         document.title = "MogCommunity | Регистрация";
     }, []);
 
-    const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
+        username: "",
         email: "",
         password: "",
     });
@@ -32,20 +31,31 @@ const SignUp = ({ setLoading }) => {
 
     const fetchSignUp = async (e) => {
         e.preventDefault();
-        setLoading(true);
-
-        const response = axios
-            .post("http://localhost:8000/api/v1/auth/sign-up", formData)
-            .then((response) => {
-                navigate("/");
-            })
-            .catch((error) => {})
-            .finally(() => {
-                setLoading(false);
-            });
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/v1/auth/sign_up`,
+                formData,
+                {
+                    withCredentials: true,
+                }
+            );
+            if (response.data.ok) {
+                window.location.href = "/me";
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                alert(
+                    "Пользователь с таким никнеймом или почтой уже существует!"
+                );
+            } else {
+                alert("Что-то пошло не так.")
+            }
+        }
     };
-
-    return (
+    
+    return isAuthenticated ? (
+        <Navigate to="/me" replace />
+    ) : (
         <div className="sign-up-container">
             <h1>Регистрация</h1>
             <form onSubmit={fetchSignUp}>

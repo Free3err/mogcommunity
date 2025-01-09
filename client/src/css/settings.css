@@ -1,0 +1,13 @@
+.settings-content {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+/* Мобильная версия */
+@media screen and (max-width: 900px) {
+    .settings-sidebar {
+        margin-bottom: 1rem;
+        min-height: auto;
+    }
+}

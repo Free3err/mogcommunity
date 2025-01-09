@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // Styles
 import "./style.css";
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isAuthenticated, isOpen, onClose }) => {
     return (
         <nav className={`side-menu ${isOpen ? "open" : ""}`}>
             <button className="close-button" onClick={onClose}>
@@ -12,13 +12,23 @@ const Sidebar = ({ isOpen, onClose }) => {
             </button>
             <ul className="menu-list">
                 <li className="menu-item">
-                    <Link
-                        to="/"
-                        className="underline-animation"
-                        onClick={onClose}
-                    >
-                        Главная
-                    </Link>
+                    {isAuthenticated ? (
+                        <Link
+                            to="/me"
+                            className="underline-animation"
+                            onClick={onClose}
+                        >
+                            Мой аккаунт
+                        </Link>
+                    ) : (
+                        <Link
+                            to="/sign-in"
+                            className="underline-animation"
+                            onClick={onClose}
+                        >
+                            Войти в аккаунт
+                        </Link>
+                    )}
                 </li>
                 <li className="menu-item">
                     <Link
@@ -40,11 +50,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </li>
                 <li className="menu-item">
                     <Link
-                        to="/sign-in"
+                        to="/about"
                         className="underline-animation"
                         onClick={onClose}
                     >
-                        Войти в аккаунт
+                        О нас
                     </Link>
                 </li>
             </ul>

@@ -13,7 +13,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 // Styles
 import './style.css';
 
-const Header = () => {
+const Header = ({isAuthenticated}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -28,7 +28,7 @@ const Header = () => {
                     ☰
                 </button>
             </header>
-            <Sidebar isOpen={isMenuOpen} onClose={toggleMenu} />
+            <Sidebar isAuthenticated={isAuthenticated} isOpen={isMenuOpen} onClose={toggleMenu} />
         </>
     );
 };

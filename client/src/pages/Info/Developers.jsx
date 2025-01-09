@@ -1,9 +1,12 @@
 // React
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Material UI
 import Grid2 from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
+
+// HTTP Client
+import axios from "axios";
 
 // Styles
 import "../../css/developers.css";
@@ -18,76 +21,19 @@ const getAgeString = (age) => {
     return "лет";
 };
 
-const Developers = ({setLoading}) => {
+const Developers = ({ setIsLoading }) => {
     const [developers, setDevelopers] = useState([]);
 
     useEffect(() => {
-        document.title = "MogCommunity | Разработчики";
         fetchDevelopers();
+        document.title = "MogCommunity | Разработчики";
     }, []);
 
-    const fetchDevelopers = () => {
-        // setLoading(true);
-        // axios.get("http://localhost:8000/api/v1/developers/get_all")
-        //     .then((response) => {
-        //         setDevelopers(response.data.developers);
-        //     })
-        //     .catch((error) => {
-        //     })
-        //     .finally(() => {
-        //         setLoading(false);
-        //     });
-        const mockData = [
-            {
-                id: 1,
-                nickname: "free3err",
-                rank: "React разработчик",
-                age: 14,
-                resources: [
-                    {
-                        name: "GitHub",
-                        url: "https://github.com/free3err",
-                    },
-                    {
-                        name: "Telegram",
-                        url: "https://t.me/free3err",
-                    },
-                ],
-            },
-            {
-                id: 2,
-                nickname: "fiodop",
-                rank: "Backend-Java разработчик",
-                age: 19,
-                resources: [
-                    {
-                        name: "GitHub",
-                        url: "https://github.com/fiodop",
-                    },
-                    {
-                        name: "Telegram",
-                        url: "https://t.me/fiodop",
-                    },
-                ],
-            },
-            {
-                id: 3,
-                nickname: "da1loks",
-                rank: "PHP разработчик",
-                age: 14,
-                resources: [
-                    {
-                        name: "GitHub",
-                        url: "https://github.com/da1loks",
-                    },
-                    {
-                        name: "Telegram",
-                        url: "https://t.me/da1loks",
-                    },
-                ],
-            },
-        ];
-        setDevelopers(mockData);
+    const fetchDevelopers = async () => {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/developers/get_all`);
+        if (response.data.ok) {
+            setDevelopers(response.data.developers);
+        }
     };
 
     const renderDevelopers = () => {
