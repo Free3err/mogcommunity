@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS roles (
 
 CREATE TABLE IF NOT EXISTS developers (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
+    user_id INTEGER NOT NULL,
     nickname VARCHAR(255) NOT NULL,
     age INTEGER,
     rank VARCHAR(255),

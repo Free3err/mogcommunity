@@ -13,6 +13,7 @@ import { signOut } from "../../modules/security";
 // Styles
 import "../../css/settings.css";
 import "../../css/settings-labels.css";
+
 const Settings = () => {
     const [selectedSetting, setSelectedSetting] = useState("account");
 

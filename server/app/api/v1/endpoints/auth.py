@@ -26,7 +26,7 @@ def sign_in() -> dict:
     user_uuid = response["data"]["user_uuid"]
     del response["data"]["session_id"]
     del response["data"]["user_uuid"]
-    
+
     response = jsonify(response)
     response.set_cookie(
         "session_id",
@@ -60,7 +60,7 @@ def sign_up() -> dict:
     user_uuid = response["data"]["user_uuid"]
     del response["data"]["session_id"]
     del response["data"]["user_uuid"]
-    
+
     response = jsonify(response)
     response.set_cookie(
         "session_id",
@@ -81,8 +81,9 @@ def sign_up() -> dict:
     return response, 200
 
 
+@request_validator
 @bp.route("/validate_session", methods=["GET"])
-def validate_session():
+def validate_session() -> dict:
     """Validate session token"""
     auth_header = request.cookies.get("session_id")
     if not auth_header:
@@ -94,26 +95,26 @@ def validate_session():
             return jsonify({"ok": False, "message": "Invalid session"}), 401
         return jsonify({"ok": True}), 200
     except Exception as e:
-        print(e)
         return jsonify({"ok": False, "message": "Invalid token format"}), 401
 
 
+@request_validator
 @bp.route("/sign_out", methods=["GET"])
-def sign_out():
+def sign_out() -> dict:
     """Sign out user"""
-    auth_header = request.cookies.get("session_id")
-    if not auth_header:
+    session_id = request.cookies.get("session_id")
+    user_uuid = request.cookies.get("user_uuid")
+    if not session_id or not user_uuid:
         return jsonify({"ok": False, "message": "No token provided"}), 401
 
     try:
-        session = get_session(auth_header)
+        session = get_session(session_id)
         if not session:
             return jsonify({"ok": False, "message": "Invalid session"}), 401
-        del_session(auth_header)
+        del_session(session_id)
         response = jsonify({"ok": True})
         response.delete_cookie("session_id")
         response.delete_cookie("user_uuid")
         return response, 200
     except Exception as e:
-        print(e)
         return jsonify({"ok": False, "message": "Invalid token format"}), 401
