@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 
 // HTTP Client
 import axios from "axios";
@@ -12,7 +12,7 @@ const AccountLabel = () => {
         }
     );
 
-    const fetchUserData = async  () => {
+    const fetchUserData = async () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/users/get_user_using_cookie`,
                 {
@@ -34,29 +34,39 @@ const AccountLabel = () => {
         const newNickname = prompt("Введите новый никнейм");
         if (newNickname) {
             try {
-                const response = await axios.post(`${process.env.REACT_APP_API_URL}/v1/user/update_nickname`, {
-                    nickname: newNickname,
-                });
-                if (response.ok) {
-                    alert("Никнейм успешно обновлен");
-                    document.location.reload();
+                const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/users/update_nickname`, {
+                        new_nickname: newNickname,
+                    },
+                    {withCredentials: true});
+                if (response.data.ok) {
+                    setUserData((prev) => ({
+                        ...prev,
+                        nickname: response.data.newNickname
+                    }))
                 }
             } catch (error) {
-                alert("В разработке!");
+                if (error.response.status === 409) {
+                    alert("Имя пользователя уже занято")
+                } else {
+                    alert("Что-то пошло не так");
+                }
             }
         }
     };
 
     const updateSessionId = async () => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/v1/user/update_uuid`, {
-            });
-            if (response.ok) {
-                alert("UUID сессии успешно обновлен");
-                document.location.reload();
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/users/update_uuid`,
+                {},
+                {withCredentials: true});
+            if (response.data.ok) {
+                setUserData(prev => ({
+                    ...prev,
+                    uuid: response.data.uuid
+                }));
             }
         } catch (error) {
-            alert("В разработке!");
+            alert("Что-то пошло не так");
         }
     };
 

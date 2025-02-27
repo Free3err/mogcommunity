@@ -13,6 +13,9 @@ class DatabaseConfig:
 class AppConfig:
     BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev')
+    API_HOST = os.getenv('API_HOST')
     CORS_HEADERS = 'Content-Type'
-    CORS_ORIGINS = ['http://localhost:3000']
+    CORS_ORIGINS = ['http://localhost:3000', os.getenv('API_HOST')]
+
+
 

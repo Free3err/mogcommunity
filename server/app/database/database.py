@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2._psycopg import cursor
 from psycopg2.extras import RealDictCursor
 
 from ..instance.config import AppConfig, DatabaseConfig
@@ -32,7 +33,7 @@ class Database:
         self.db.commit()
         
     @error_catcher
-    def cursor(self) -> RealDictCursor:
+    def cursor(self) -> cursor:
         """Get cursor"""
         return self.db.cursor()
     

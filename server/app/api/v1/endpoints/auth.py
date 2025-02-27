@@ -1,4 +1,7 @@
-from flask import request, jsonify
+from typing import Any
+from uuid import UUID
+
+from flask import request, jsonify, Response
 from flask_cors import CORS
 
 from . import auth_bp as bp
@@ -7,13 +10,12 @@ from ....database.handlers import get_session, del_session
 from ....utils import request_validator
 from ....instance.config import AppConfig
 
-
 CORS(bp, origins=AppConfig.CORS_ORIGINS, supports_credentials=True)
 
 
 @request_validator
 @bp.route("/sign_in", methods=["POST"])
-def sign_in() -> dict:
+def sign_in() -> tuple[Response, int]:
     """Sign in user"""
     data = request.json
     response = auth_service.login_user(
@@ -49,7 +51,7 @@ def sign_in() -> dict:
 
 @request_validator
 @bp.route("/sign_up", methods=["POST"])
-def sign_up() -> dict:
+def sign_up() -> tuple[Response, Any] | tuple[Response, int]:
     """Sign up user"""
     data = request.json
     response = auth_service.register_user(**data)
@@ -83,15 +85,18 @@ def sign_up() -> dict:
 
 @request_validator
 @bp.route("/validate_session", methods=["GET"])
-def validate_session() -> dict:
+def validate_session() -> tuple[Response, int]:
     """Validate session token"""
-    auth_header = request.cookies.get("session_id")
-    if not auth_header:
+    user_uuid = request.cookies.get("user_uuid")
+    session_id = request.cookies.get("session_id")
+    if not (user_uuid or session_id):
         return jsonify({"ok": False, "message": "No token provided"}), 401
 
     try:
-        session = get_session(auth_header)
+        session = get_session(session_id)
         if not session:
+            return jsonify({"ok": False, "message": "Invalid session"}), 401
+        if session["user_uuid"] != UUID(user_uuid):
             return jsonify({"ok": False, "message": "Invalid session"}), 401
         return jsonify({"ok": True}), 200
     except Exception as e:
@@ -100,11 +105,10 @@ def validate_session() -> dict:
 
 @request_validator
 @bp.route("/sign_out", methods=["GET"])
-def sign_out() -> dict:
+def sign_out() -> tuple[Response, int]:
     """Sign out user"""
     session_id = request.cookies.get("session_id")
-    user_uuid = request.cookies.get("user_uuid")
-    if not session_id or not user_uuid:
+    if not session_id:
         return jsonify({"ok": False, "message": "No token provided"}), 401
 
     try:
@@ -112,9 +116,6 @@ def sign_out() -> dict:
         if not session:
             return jsonify({"ok": False, "message": "Invalid session"}), 401
         del_session(session_id)
-        response = jsonify({"ok": True})
-        response.delete_cookie("session_id")
-        response.delete_cookie("user_uuid")
-        return response, 200
+        return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "message": "Invalid token format"}), 401

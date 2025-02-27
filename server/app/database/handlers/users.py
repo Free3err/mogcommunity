@@ -9,7 +9,7 @@ def get_user(username: str | None = None, email: str | None = None, user_uuid: U
     """Get user by username, email or uuid"""
     conditions = []
     values = []
-    
+
     if user_uuid:
         conditions.append("uuid = %s")
         values.append(str(user_uuid))
@@ -19,12 +19,12 @@ def get_user(username: str | None = None, email: str | None = None, user_uuid: U
     if email:
         conditions.append("email = %s")
         values.append(email)
-        
+
     query = f"SELECT * FROM users WHERE {' AND '.join(conditions)}"
     with db.cursor() as cursor:
         cursor.execute(query, tuple(values))
         data = cursor.fetchone()
-    
+
     return data
 
 
@@ -51,16 +51,29 @@ def create_user(**data: dict) -> dict:
 
 @error_catcher
 @db_transaction(db)
-def update_user(**data: dict) -> bool:
+def update_user(id: int | None = None, user_uuid: UUID | None = None, **kwargs) -> bool:
     """Update existing user in database"""
-    if data.get("password_hash", None):
-        data["password_hash"] = hash_password(data["password_hash"])
 
+    if "password_hash" in kwargs:
+        kwargs["password_hash"] = hash_password(kwargs["password_hash"])
+
+    set_clause = ", ".join([f"{key} = %s" for key in kwargs])
+    params = tuple(kwargs.values())
+    where_clause = ""
+    if id:
+        where_clause = "id = %s"
+        params += (id,)
+    elif user_uuid:
+        where_clause = "uuid = %s"
+        params += (str(user_uuid),)
+
+    if not where_clause:
+        return False
+
+    query = f"UPDATE users SET {set_clause} WHERE {where_clause}"
     with db.cursor() as cursor:
-        cursor.execute(
-            f"UPDATE users SET {', '.join([f'{value} = {data[value]}' for value in data if value != 'id'])} WHERE id = %s",
-            (data["id"]),
-        )
+        cursor.execute(query, params)
+
     return True
 
 
