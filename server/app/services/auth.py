@@ -36,12 +36,12 @@ def login_user(username, password) -> dict:
     if not check_password(user["password_hash"], password):
         return {"ok": False, "message": "Unauthorized"}, 401
 
-    session_id = create_session(user["uuid"])
+    session_id = create_session(user["user_uuid"])
     return {
         "ok": True,
         "data": {
             "username": username, 
             "session_id": session_id,
-            "user_uuid": str(user["uuid"])
+            "user_uuid": str(user["user_uuid"])
         },
     }

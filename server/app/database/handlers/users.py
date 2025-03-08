@@ -5,26 +5,20 @@ from uuid import UUID
 
 @error_catcher
 @db_transaction(db)
-def get_user(username: str | None = None, email: str | None = None, user_uuid: UUID | None = None) -> dict:
-    """Get user by username, email or uuid"""
+def get_user(**kwargs) -> dict:
+    """Get user by using kwargs"""
     conditions = []
     values = []
 
-    if user_uuid:
-        conditions.append("uuid = %s")
-        values.append(str(user_uuid))
-    if username:
-        conditions.append("username = %s")
-        values.append(username)
-    if email:
-        conditions.append("email = %s")
-        values.append(email)
+    for key, value in kwargs.items():
+        if not value is None:
+            conditions.append(f"{key} = %s")
+            values.append(value)
 
     query = f"SELECT * FROM users WHERE {' AND '.join(conditions)}"
     with db.cursor() as cursor:
         cursor.execute(query, tuple(values))
         data = cursor.fetchone()
-
     return data
 
 
@@ -35,7 +29,7 @@ def create_user(**data: dict) -> dict:
     password_hash = hash_password(data["password"])
     with db.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO users (username, email, password_hash, role, uuid) VALUES (%s, %s, %s, %s, %s)",
+            "INSERT INTO users (username, email, password_hash, role, user_uuid) VALUES (%s, %s, %s, %s, %s)",
             (
                 data["username"],
                 data["email"],
@@ -51,28 +45,35 @@ def create_user(**data: dict) -> dict:
 
 @error_catcher
 @db_transaction(db)
-def update_user(id: int | None = None, user_uuid: UUID | None = None, **kwargs) -> bool:
+def update_user(selector: dict, **kwargs) -> bool:
     """Update existing user in database"""
-
     if "password_hash" in kwargs:
         kwargs["password_hash"] = hash_password(kwargs["password_hash"])
 
     set_clause = ", ".join([f"{key} = %s" for key in kwargs])
     params = tuple(kwargs.values())
-    where_clause = ""
-    if id:
-        where_clause = "id = %s"
-        params += (id,)
-    elif user_uuid:
-        where_clause = "uuid = %s"
-        params += (str(user_uuid),)
 
-    if not where_clause:
+    where_clauses = []
+    where_params = []
+
+    if "id" in selector:
+        where_clauses.append("id = %s")
+        where_params.append(selector["id"])
+    if "uuid" in selector:
+        where_clauses.append("user_uuid = %s")
+        where_params.append(str(selector["uuid"]))
+    if "username" in selector:
+        where_clauses.append("username = %s")
+        where_params.append(selector["username"])
+
+    if not where_clauses:
         return False
 
+    where_clause = " OR ".join(where_clauses)
     query = f"UPDATE users SET {set_clause} WHERE {where_clause}"
+
     with db.cursor() as cursor:
-        cursor.execute(query, params)
+        cursor.execute(query, params + tuple(where_params))
 
     return True
 

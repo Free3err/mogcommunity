@@ -76,7 +76,7 @@ def sign_up() -> tuple[Response, Any] | tuple[Response, int]:
         "user_uuid",
         user_uuid,
         httponly=True,
-        secure=False,
+        secure=True,
         samesite="strict",
         max_age=60 * 60 * 24 * 7,
     )
