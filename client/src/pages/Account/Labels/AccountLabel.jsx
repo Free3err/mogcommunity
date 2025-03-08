@@ -14,7 +14,7 @@ const AccountLabel = () => {
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/users/get_user_using_cookie`,
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/users/get_user?by_using=cookies`,
                 {
                     withCredentials: true,
                 }
@@ -22,7 +22,7 @@ const AccountLabel = () => {
             setUserData({
                 nickname: response.data.data.username,
                 id: response.data.data.id,
-                uuid: response.data.data.uuid,
+                uuid: response.data.data.user_uuid,
                 registration_date: response.data.data.created_at,
             });
         } catch (error) {
@@ -62,7 +62,7 @@ const AccountLabel = () => {
             if (response.data.ok) {
                 setUserData(prev => ({
                     ...prev,
-                    uuid: response.data.uuid
+                    uuid: response.data.user_uuid
                 }));
             }
         } catch (error) {
