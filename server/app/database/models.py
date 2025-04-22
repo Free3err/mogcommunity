@@ -1,7 +1,7 @@
 from datetime import datetime
-from uuid import UUID
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, ARRAY, JSON
-from sqlalchemy.dialects.postgresql import UUID as PgUUID
+
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, ARRAY, JSON
+from sqlalchemy.dialects.postgresql.types import PGUuid
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -13,12 +13,11 @@ class User(Base):
     email = Column(Text, unique=True, nullable=False)
     username = Column(Text, unique=True, nullable=False)
     password_hash = Column(Text, nullable=False)
-    role = Column(Integer, nullable=False)
-    user_uuid = Column(PgUUID, unique=True, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    
-    sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
+    role = Column(Integer, nullable=False, default=1)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+
     developer = relationship("Developer", back_populates="user", uselist=False)
+    auth_tokens = relationship("AuthToken", back_populates="user")
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -48,24 +47,12 @@ class Project(Base):
     tags = Column(ARRAY(Text))
     action = Column(JSON)
 
-class Session(Base):
-    __tablename__ = 'sessions'
-    
-    id = Column(Integer, primary_key=True)
-    session_id = Column(String(32), unique=True, nullable=False)
-    user_uuid = Column(PgUUID, ForeignKey('users.user_uuid', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    expires_at = Column(DateTime, nullable=False)
-    is_active = Column(Boolean, nullable=False, default=True)
-    
-    user = relationship("User", back_populates="sessions") 
-
 class Idea(Base):
     __tablename__ = 'ideas'
 
     id = Column(Integer, primary_key=True)
     title = Column(String(256), nullable=False)
-    text = Column(Text(2048), nullable=False)
+    text = Column(String(2048), nullable=False)
     comments = Column(ARRAY(Integer))
 
 class Comment(Base):
@@ -74,3 +61,15 @@ class Comment(Base):
     id = Column(Integer, primary_key=True)
     by_user = Column(Integer, nullable=False)
     text = Column(String(512), nullable=False)
+
+class AuthToken(Base):
+    __tablename__ = 'auth_tokens'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    token = Column(PGUuid, nullable=False)
+    refresh_tokens = Column(ARRAY(Text), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    expires_at = Column(DateTime, nullable=False)
+    
+    user = relationship("User", back_populates="auth_tokens")

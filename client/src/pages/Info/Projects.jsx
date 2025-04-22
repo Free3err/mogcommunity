@@ -20,7 +20,7 @@ const Projects = ({setLoading}) => {
     }, []);
     
     const fetchProjects = async () => {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/projects/get_all`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/projects`);
         if (response.data.ok) {
             setProjects(response.data.projects);
         }

@@ -14,7 +14,7 @@ const AccountLabel = () => {
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/users/get_user?by_using=cookies`,
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/user?by_using=cookies`,
                 {
                     withCredentials: true,
                 }
@@ -34,8 +34,8 @@ const AccountLabel = () => {
         const newNickname = prompt("Введите новый никнейм");
         if (newNickname) {
             try {
-                const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/users/update_nickname`, {
-                        new_nickname: newNickname,
+                const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/user/nickname`, {
+                        newNickname: newNickname,
                     },
                     {withCredentials: true});
                 if (response.data.ok) {
@@ -56,7 +56,7 @@ const AccountLabel = () => {
 
     const updateSessionId = async () => {
         try {
-            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/users/update_uuid`,
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/v1/user`,
                 {},
                 {withCredentials: true});
             if (response.data.ok) {

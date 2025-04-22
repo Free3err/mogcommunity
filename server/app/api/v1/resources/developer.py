@@ -21,12 +21,12 @@ class Developer(Resource):
         developer_data = DatabaseUtils.object_to_dict(developer)
         return {'ok': True, 'developer': developer_data}, 200
 
-    def put(self):
+    def patch(self):
         attrs = request.get_json()
         if not attrs:
             return {'ok': False, "error": "Request body is empty"}, 400
 
-        dev = DevelopersHandler.put(attrs)
+        dev = DevelopersHandler.update(attrs)
         if not dev:
             return {'ok': False, "error": "Developer not found"}, 400
         developer_data = DatabaseUtils.object_to_dict(dev)

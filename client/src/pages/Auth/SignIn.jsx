@@ -32,7 +32,7 @@ const SignIn = ({isAuthenticated}) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/v1/auth/sign_in`,
+                `${process.env.REACT_APP_API_URL}/v1/auth/sign-in`,
                 formData,
                 {
                     withCredentials: true,

@@ -7,7 +7,7 @@ import axios from "axios";
 const validateSession = async () => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/v1/auth/validate_session`,
+            `${process.env.REACT_APP_API_URL}/v1/auth/validate-session`,
             {
                 withCredentials: true,
             }
@@ -24,7 +24,7 @@ const ProtectedRoute = ({ isAuthenticated, element }) => {
 
 const signOut = async () => {
     const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/v1/auth/sign_out`,
+        `${process.env.REACT_APP_API_URL}/v1/auth/sign-out`,
         {
             withCredentials: true,
         }

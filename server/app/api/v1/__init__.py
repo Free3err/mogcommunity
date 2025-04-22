@@ -1,11 +1,22 @@
-from flask import Blueprint
+from .resources.developer import DevelopersList, Developer
+from .resources.user import UsersList, User
+from .resources.project import ProjectsList, Project
+from .resources.auth import SignUp, SignIn, Session
 
-from .endpoints import users_bp, projects_bp, developers_bp, auth_bp
+__all__ = ['UsersList', 'User', 'DevelopersList', 'Developer', 'ProjectsList', 'Project']
 
-bp = Blueprint("api_v1", __name__, url_prefix="/api/v1")
+resources = {
+    UsersList: "/api/v1/users",
+    User: "/api/v1/user/<int:user_id>",
+    DevelopersList: "/api/v1/developers",
+    Developer: "/api/v1/developer/<int:dev_id>",
+    ProjectsList: "/api/v1/projects",
+    Project: "/api/v1/project/<int:project_id>",
+    SignUp: "/api/v1/sign-up",
+    SignIn: "/api/v1/sign-in",
+    Session: "/api/v1/session",
+}
 
-bp.register_blueprint(users_bp)
-bp.register_blueprint(projects_bp)
-bp.register_blueprint(developers_bp)
-bp.register_blueprint(auth_bp)
-
+def register_resources(api):
+    for resource, url in resources.items():
+        api.add_resource(resource, url)

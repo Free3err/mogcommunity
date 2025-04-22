@@ -21,12 +21,12 @@ class User(Resource):
         user_data = DatabaseUtils.object_to_dict(user)
         return {'ok': True, 'user': user_data}, 200
 
-    def put(self, user_id):
+    def patch(self, user_id):
         attrs = request.get_json()
         if not attrs:
             return {'ok': False, 'error': 'Request body is empty'}, 400
             
-        user = UsersHandler.put(user_id, attrs=attrs)
+        user = UsersHandler.update(user_id, attrs=attrs)
         if not user:
             return {'ok': False, 'error': 'User not found'}, 404
             

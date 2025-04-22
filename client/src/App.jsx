@@ -22,6 +22,8 @@ import SignIn from "./pages/Auth/SignIn";
 import SignUp from "./pages/Auth/SignUp";
 import NotFound from "./pages/Info/NotFound";
 import Account from "./pages/Account/Account";
+import ProposeIdea from "./pages/Info/ProposeIdea";
+import EyeResearch from "./pages/Projects/EyeResearch";
 
 // Modules
 import ProtectedRoute from "./modules/security";
@@ -75,6 +77,14 @@ const App = () => {
                 element: <SignUp isAuthenticated={isAuthenticated} />,
             },
             {
+                path: "/propose-idea",
+                element: <ProposeIdea isAuthenticated={isAuthenticated}/>,
+            },
+            {
+                path: "eye-research",
+                element: <EyeResearch />
+            },
+            {
                 path: "*",
                 element: <NotFound />,
             },
@@ -83,7 +93,7 @@ const App = () => {
             {
                 path: "/me",
                 element: <Account />,
-            },
+            }
         ],
     };
 
@@ -100,9 +110,7 @@ const App = () => {
     return (
         <BrowserRouter>
             <ScrollToTop />
-            <Header isAuthenticated={isAuthenticated}/>
             <Routing />
-            <Footer isAuthenticated={isAuthenticated} />
         </BrowserRouter>
     );
 };

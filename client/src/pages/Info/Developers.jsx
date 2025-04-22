@@ -30,7 +30,7 @@ const Developers = ({ setIsLoading }) => {
     }, []);
 
     const fetchDevelopers = async () => {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/developers/get_all`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/developers`);
         if (response.data.ok) {
             setDevelopers(response.data.developers);
         }
@@ -53,7 +53,7 @@ const Developers = ({ setIsLoading }) => {
                     </p>
                 </div>
                 <div className="resources-buttons">
-                    {dev.resources.map((resource) => (
+                    {(dev.resources) ? dev.resources.map((resource) => (
                         <a
                             key={`${dev.id}-${resource.name}`}
                             href={resource.url}
@@ -63,7 +63,7 @@ const Developers = ({ setIsLoading }) => {
                         >
                             {resource.name}
                         </a>
-                    ))}
+                    )) : ''}
                 </div>
             </Grid2>
         ));

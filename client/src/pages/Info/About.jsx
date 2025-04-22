@@ -11,6 +11,7 @@ const About = () => {
     useEffect(() => {
         document.title = "MogCommunity | О нас";
     }, []);
+
     return (
         <div className="about-container">
             <Container maxWidth="lg" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>

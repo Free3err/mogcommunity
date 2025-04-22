@@ -1,48 +1,37 @@
-import os
-import psycopg2
-from psycopg2._psycopg import cursor
-from psycopg2.extras import RealDictCursor
+import logging
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from ..instance.config import AppConfig, DatabaseConfig
-from ..utils import error_catcher
+from ..instance.config import DatabaseConfig
+from .models import Base
 
 class Database:
-    @error_catcher
     def __init__(self) -> None:
         """Database initialization"""
-        self.db = psycopg2.connect(
-            host=DatabaseConfig.DATABASE_HOST,
-            port=DatabaseConfig.DATABASE_PORT,
-            database=DatabaseConfig.DATABASE_NAME,
-            user=DatabaseConfig.DATABASE_USER,
-            password=DatabaseConfig.DATABASE_PASSWORD,
-            cursor_factory=RealDictCursor
+        self.engine = create_engine(
+            f"postgresql://{DatabaseConfig.DATABASE_USER}:{DatabaseConfig.DATABASE_PASSWORD}@"
+            f"{DatabaseConfig.DATABASE_HOST}:{DatabaseConfig.DATABASE_PORT}/{DatabaseConfig.DATABASE_NAME}"
+        )
+        self.SessionLocal = sessionmaker(
+            autocommit=False, 
+            autoflush=False, 
+            bind=self.engine,
         )
         self.init_schema()
-        psycopg2.extras.register_uuid()
-            
-    @error_catcher
+        logging.info("Database initialized")
+
     def init_schema(self) -> None:
-        """Load schema"""
-        with open(
-            os.path.join(AppConfig.BASE_DIR, "database", "schema.sql"), "r"
-        ) as file:
-            schema = file.read()
-        with self.db.cursor() as cursor:
-            cursor.execute(schema)
-        self.db.commit()
-        
-    @error_catcher
-    def cursor(self) -> cursor:
-        """Get cursor"""
-        return self.db.cursor()
-    
-    @error_catcher
-    def commit(self) -> None:
+        """Create all tables"""
+        Base.metadata.create_all(bind=self.engine)
+
+    def get_session(self):
+        """Get database session"""
+        return self.SessionLocal()
+
+    def commit(self, session) -> None:
         """Commit changes"""
-        self.db.commit()
-        
-    @error_catcher
-    def rollback(self) -> None:
+        session.commit()
+
+    def rollback(self, session) -> None:
         """Rollback changes"""
-        self.db.rollback()
+        session.rollback()
